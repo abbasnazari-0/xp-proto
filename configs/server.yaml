@@ -1,0 +1,17 @@
+# XP Protocol Server Configuration
+mode: server
+
+server:
+  listen: "0.0.0.0:443"
+  key: "dGhpc2lzYXZlcnlzZWN1cmVrZXkxMjM0NTY3ODkwYWI="  # Change this!
+  fake_site: "www.microsoft.com"
+  
+  # Anti-probe protection - when someone probes your server,
+  # they see a real Microsoft website!
+  probe_resist: true
+  fallback_site: "www.microsoft.com"
+  
+  # Obfuscation settings (recommended: all true)
+  fragment: true      # Fragment packets to bypass DPI
+  padding: true       # Add random padding to hide traffic patterns
+  timing_jitter: true # Random timing to avoid detection

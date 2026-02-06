@@ -1,0 +1,29 @@
+# XP Protocol Server Configuration - RAW MODE (Ultimate Stealth!)
+#
+# این حالت از پکت‌های خام TCP استفاده می‌کنه
+# برای اجرا نیاز به دسترسی root/sudo داره
+#
+# نکته مهم: سرور باید IP پابلیک داشته باشه یا port forward شده باشه
+
+mode: server
+
+transport:
+  mode: raw   # "tls" (default), "kcp", or "raw" (ultimate stealth!)
+  
+  raw:
+    interface: "eth0"          # Network interface
+    local_ip: "0.0.0.0"        # Listen on all interfaces
+    router_mac: ""             # Not needed for server
+    tcp_flags: ["PA", "A"]     # Flag rotation
+    use_kcp: true              # Reliable transport
+
+  kcp:
+    mode: "fast2"
+    data_shards: 10
+    parity_shards: 3
+
+server:
+  listen: "0.0.0.0:443"        # Not used in raw mode directly
+  key: "YOUR_SECRET_KEY_HERE"
+  probe_resist: true           # Still useful for fallback
+  fallback_site: "www.microsoft.com"

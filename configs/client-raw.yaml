@@ -1,0 +1,39 @@
+# XP Protocol Client Configuration - RAW MODE (Ultimate Stealth!)
+# 
+# این حالت از پکت‌های خام TCP استفاده می‌کنه و کاملاً از سیستم‌عامل عبور می‌کنه!
+# برای اجرا نیاز به دسترسی root/sudo داره
+#
+# مزایا:
+# - هیچ socket سیستم‌عامل وجود نداره که DPI بتونه شناسایی کنه
+# - پکت‌ها قابل ردیابی توسط netstat یا ss نیستن
+# - امکان تغییر TCP flags برای گمراه کردن فایروال
+#
+# نیازمندی‌ها:
+# - sudo/root access
+# - libpcap installed
+# - Network interface name (eth0, en0, etc.)
+# - Router's MAC address
+
+mode: client
+
+transport:
+  mode: raw   # "tls" (default), "kcp", or "raw" (ultimate stealth!)
+  
+  raw:
+    interface: "en0"           # Network interface (eth0 on Linux, en0 on macOS)
+    local_ip: "192.168.1.100"  # Your local IP address
+    router_mac: "aa:bb:cc:dd:ee:ff"  # Your router's MAC address (use: arp -a)
+    tcp_flags: ["PA", "A"]     # Rotate between PSH+ACK and ACK only
+    use_kcp: true              # Use KCP for reliable transport over raw packets
+
+  kcp:
+    mode: "fast2"              # normal, fast, fast2, fast3
+    data_shards: 10            # Reed-Solomon coding
+    parity_shards: 3           # Error correction
+
+client:
+  server_addr: "your-server.com:443"
+  key: "YOUR_SECRET_KEY_HERE"
+  socks_addr: "127.0.0.1:1080"  # Local SOCKS5 proxy
+  fake_sni: "www.microsoft.com" # Not used in raw mode, but for fallback
+  fingerprint: "chrome"

@@ -1,0 +1,19 @@
+# XP Protocol Client Configuration
+mode: client
+
+client:
+  server_addr: "your-server-ip:443"  # Your XP server address
+  key: "dGhpc2lzYXZlcnlzZWN1cmVrZXkxMjM0NTY3ODkwYWI="  # Same as server!
+  fake_sni: "www.microsoft.com"  # SNI to show to DPI (looks like Microsoft traffic)
+  
+  # Local proxy addresses
+  socks_addr: "127.0.0.1:1080"  # SOCKS5 proxy
+  http_addr: "127.0.0.1:8080"   # HTTP proxy (optional)
+  
+  # Obfuscation settings (must match server!)
+  fragment: true      # Fragment ClientHello to bypass SNI detection
+  padding: true       # Random padding
+  timing_jitter: true # Random timing
+  
+  # Browser TLS fingerprint to mimic
+  fingerprint: "chrome"  # Options: chrome, firefox, safari
