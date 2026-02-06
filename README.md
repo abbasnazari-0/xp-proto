@@ -72,7 +72,7 @@ xp uninstall  # حذف
 
 ```bash
 # Clone
-git clone https://github.com/xp-proto/xp
+git clone https://github.com/abbasnazari-0/xp-proto
 cd xp
 
 # Build

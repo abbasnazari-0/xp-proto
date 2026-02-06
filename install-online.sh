@@ -9,7 +9,7 @@
 
 set -e
 
-REPO_URL="https://github.com/xp-proto/xp"
+REPO_URL="https://github.com/abbasnazari-0/xp-proto"
 INSTALL_DIR="/tmp/xp-install"
 
 # Colors

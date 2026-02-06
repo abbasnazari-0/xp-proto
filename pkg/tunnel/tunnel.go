@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/xp-proto/xp/pkg/crypto"
-	"github.com/xp-proto/xp/pkg/obfs"
+	"github.com/abbasnazari-0/xp-proto/pkg/crypto"
+	"github.com/abbasnazari-0/xp-proto/pkg/obfs"
 )
 
 type Tunnel struct {

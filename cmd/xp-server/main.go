@@ -11,10 +11,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/xp-proto/xp/pkg/config"
-	"github.com/xp-proto/xp/pkg/crypto"
-	"github.com/xp-proto/xp/pkg/obfs"
-	"github.com/xp-proto/xp/pkg/tunnel"
+	"github.com/abbasnazari-0/xp-proto/pkg/config"
+	"github.com/abbasnazari-0/xp-proto/pkg/crypto"
+	"github.com/abbasnazari-0/xp-proto/pkg/obfs"
+	"github.com/abbasnazari-0/xp-proto/pkg/tunnel"
 )
 
 var (

@@ -11,11 +11,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/xp-proto/xp/pkg/config"
-	"github.com/xp-proto/xp/pkg/crypto"
-	"github.com/xp-proto/xp/pkg/obfs"
-	xtls "github.com/xp-proto/xp/pkg/tls"
-	"github.com/xp-proto/xp/pkg/tunnel"
+	"github.com/abbasnazari-0/xp-proto/pkg/config"
+	"github.com/abbasnazari-0/xp-proto/pkg/crypto"
+	"github.com/abbasnazari-0/xp-proto/pkg/obfs"
+	xtls "github.com/abbasnazari-0/xp-proto/pkg/tls"
+	"github.com/abbasnazari-0/xp-proto/pkg/tunnel"
 )
 
 var (

@@ -1,4 +1,4 @@
-module github.com/xp-proto/xp
+module github.com/abbasnazari-0/xp-proto
 
 go 1.24.4
 
