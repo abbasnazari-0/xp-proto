@@ -5,6 +5,7 @@
 ## ویژگی‌ها
 
 ### حالت TLS (پیش‌فرض)
+
 - 🔪 **TLS ClientHello Fragmentation** - شکستن پکت‌ها برای دور زدن تشخیص SNI
 - 🎭 **Chrome TLS Fingerprint** - تقلید از fingerprint مرورگر Chrome
 - 🔐 **ChaCha20-Poly1305** - رمزنگاری سریع و امن
@@ -13,6 +14,7 @@
 - 🎯 **Anti-Probe** - وقتی کسی سرور رو probe می‌کنه، یه سایت واقعی می‌بینه!
 
 ### حالت Raw (Ultimate Stealth! 🥷)
+
 - 🔥 **Raw TCP Packets** - دور زدن کامل TCP stack سیستم‌عامل
 - 👻 **Invisible** - هیچ socket در netstat/ss دیده نمیشه
 - 🔀 **TCP Flag Rotation** - چرخش بین flagهای مختلف TCP
@@ -44,13 +46,13 @@ sudo bash install.sh
 
 ### چی نصب میشه؟
 
-| مورد | توضیح |
-|------|-------|
-| 🐳 Docker | اجرا در container ایزوله |
-| 🔥 UFW Firewall | فقط پورت‌های لازم باز |
-| 🛡️ Fail2ban | محافظت از SSH |
-| 🚀 BBR | بهبود سرعت TCP |
-| 🔄 Auto Updates | آپدیت‌های امنیتی خودکار |
+| مورد            | توضیح                    |
+| --------------- | ------------------------ |
+| 🐳 Docker       | اجرا در container ایزوله |
+| 🔥 UFW Firewall | فقط پورت‌های لازم باز    |
+| 🛡️ Fail2ban     | محافظت از SSH            |
+| 🚀 BBR          | بهبود سرعت TCP           |
+| 🔄 Auto Updates | آپدیت‌های امنیتی خودکار  |
 
 ### دستورات مدیریت
 
@@ -90,6 +92,7 @@ go build -o bin/xp-client ./cmd/xp-client
 ### ۲. تنظیم سرور
 
 فایل `server.yaml`:
+
 ```yaml
 mode: server
 
@@ -105,6 +108,7 @@ server:
 ```
 
 اجرا:
+
 ```bash
 ./bin/xp-server -c server.yaml
 ```
@@ -112,6 +116,7 @@ server:
 ### ۳. تنظیم کلاینت
 
 فایل `client.yaml`:
+
 ```yaml
 mode: client
 
@@ -127,6 +132,7 @@ client:
 ```
 
 اجرا:
+
 ```bash
 ./bin/xp-client -c client.yaml
 ```
@@ -134,6 +140,7 @@ client:
 ### ۴. استفاده
 
 مرورگر یا برنامه خودتو به SOCKS5 proxy وصل کن:
+
 - **Address:** `127.0.0.1`
 - **Port:** `1080`
 
@@ -172,7 +179,7 @@ client:
 # macOS
 brew install libpcap
 
-# Ubuntu/Debian  
+# Ubuntu/Debian
 sudo apt-get install libpcap-dev
 
 # RHEL/CentOS
@@ -195,18 +202,19 @@ ip neigh show | grep gateway  # Linux
 ### تنظیم کلاینت Raw
 
 فایل `client-raw.yaml`:
+
 ```yaml
 mode: client
 
 transport:
-  mode: raw   # 🥷 Ultimate stealth!
-  
+  mode: raw # 🥷 Ultimate stealth!
+
   raw:
-    interface: "en0"           # eth0 در Linux
-    local_ip: "192.168.1.100"  # IP خودت
-    router_mac: "aa:bb:cc:dd:ee:ff"  # MAC روتر
-    tcp_flags: ["PA", "A"]     # چرخش flag
-    use_kcp: true              # Reliable transport
+    interface: "en0" # eth0 در Linux
+    local_ip: "192.168.1.100" # IP خودت
+    router_mac: "aa:bb:cc:dd:ee:ff" # MAC روتر
+    tcp_flags: ["PA", "A"] # چرخش flag
+    use_kcp: true # Reliable transport
 
 client:
   server_addr: "your-server.com:443"
@@ -248,6 +256,7 @@ sudo ./bin/xp-client -c client-raw.yaml
 ## تکنیک‌های Anti-DPI
 
 ### 1. TLS ClientHello Fragmentation
+
 SNI در پکت TLS ClientHello قرار داره. ما این پکت رو به تیکه‌های کوچیک می‌شکنیم:
 
 ```
@@ -259,20 +268,22 @@ SNI در پکت TLS ClientHello قرار داره. ما این پکت رو به 
 ```
 
 ### 2. Chrome TLS Fingerprint
+
 پکت‌های ما دقیقاً شبیه Chrome به نظر میان - cipher suites، extensions، و ترتیب همه چیز.
 
 ### 3. Anti-Probe Protection
+
 اگه کسی (مثل censorship system) سرور رو probe کنه، به جای VPN، یه سایت واقعی (مثل Microsoft) می‌بینه!
 
 ## مقایسه با بقیه
 
-| ویژگی | OpenVPN | WireGuard | Xray | **XP Protocol** |
-|-------|---------|-----------|------|-----------------|
-| Anti-DPI | ❌ | ❌ | ✅ | ✅✅ |
-| Fragmentation | ❌ | ❌ | ❌ | ✅ |
-| Browser Fingerprint | ❌ | ❌ | ⚠️ | ✅ |
-| Anti-Probe | ❌ | ❌ | ⚠️ | ✅ |
-| سادگی استفاده | ❌ | ✅ | ⚠️ | ✅ |
+| ویژگی               | OpenVPN | WireGuard | Xray | **XP Protocol** |
+| ------------------- | ------- | --------- | ---- | --------------- |
+| Anti-DPI            | ❌      | ❌        | ✅   | ✅✅            |
+| Fragmentation       | ❌      | ❌        | ❌   | ✅              |
+| Browser Fingerprint | ❌      | ❌        | ⚠️   | ✅              |
+| Anti-Probe          | ❌      | ❌        | ⚠️   | ✅              |
+| سادگی استفاده       | ❌      | ✅        | ⚠️   | ✅              |
 
 ## License
 
