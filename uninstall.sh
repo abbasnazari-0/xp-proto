@@ -28,7 +28,7 @@ fi
 
 echo -e "${YELLOW}این عمل غیرقابل برگشت است!${NC}"
 echo -e "آیا مطمئنید که می‌خواهید XP Protocol را حذف کنید؟ (yes/no)"
-read -r confirm
+read -r confirm < /dev/tty
 
 if [[ "$confirm" != "yes" ]]; then
     echo "لغو شد."

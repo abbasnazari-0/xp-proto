@@ -29,7 +29,7 @@
 
 ```bash
 # نصب آنلاین (یک دستور!)
-curl -sSL https://raw.githubusercontent.com/xp-proto/xp/main/install-online.sh | sudo bash
+bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-online.sh)
 ```
 
 یا اگه فایل‌ها رو دارید:

@@ -75,7 +75,7 @@ check_os() {
     source /etc/os-release
     if [[ "$ID" != "ubuntu" && "$ID" != "debian" ]]; then
         log_warn "این اسکریپت برای Ubuntu/Debian طراحی شده. ادامه می‌دید؟ (y/n)"
-        read -r confirm
+        read -r confirm < /dev/tty
         if [[ "$confirm" != "y" ]]; then
             exit 1
         fi
@@ -92,12 +92,12 @@ get_user_input() {
     
     # Port
     echo -e "${CYAN}پورت سرور (پیش‌فرض: 443):${NC}"
-    read -r input_port
+    read -r input_port < /dev/tty
     SERVER_PORT=${input_port:-443}
     
     # Fake site
     echo -e "${CYAN}سایت جعلی برای Anti-Probe (پیش‌فرض: www.microsoft.com):${NC}"
-    read -r input_fake_site
+    read -r input_fake_site < /dev/tty
     FAKE_SITE=${input_fake_site:-www.microsoft.com}
     
     # Transport mode
@@ -105,7 +105,7 @@ get_user_input() {
     echo "  1) TLS (پیش‌فرض - پیشنهادی)"
     echo "  2) KCP (سریع‌تر، مناسب شبکه‌های با packet loss)"
     echo "  3) Raw (نیاز به تنظیمات بیشتر)"
-    read -r input_mode
+    read -r input_mode < /dev/tty
     case $input_mode in
         2) TRANSPORT_MODE="kcp" ;;
         3) TRANSPORT_MODE="raw" ;;
@@ -114,7 +114,7 @@ get_user_input() {
     
     # Enable BBR
     echo -e "${CYAN}فعال‌سازی BBR برای بهبود سرعت؟ (y/n, پیش‌فرض: y):${NC}"
-    read -r input_bbr
+    read -r input_bbr < /dev/tty
     ENABLE_BBR=${input_bbr:-y}
     
     echo ""
@@ -128,7 +128,7 @@ get_user_input() {
     echo ""
     
     echo -e "${CYAN}ادامه می‌دید؟ (y/n):${NC}"
-    read -r confirm
+    read -r confirm < /dev/tty
     if [[ "$confirm" != "y" ]]; then
         log_info "لغو شد."
         exit 0
@@ -200,7 +200,7 @@ create_dockerfile() {
     
     cat > $XP_DIR/Dockerfile << 'DOCKERFILE'
 # XP Protocol Server - Docker Image
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 # Install dependencies
 RUN apk add --no-cache git gcc musl-dev libpcap-dev
@@ -255,8 +255,6 @@ create_docker_compose() {
     log_info "ایجاد docker-compose.yml..."
     
     cat > $XP_DIR/docker-compose.yml << EOF
-version: '3.8'
-
 services:
   xp-server:
     build: .
@@ -487,7 +485,7 @@ case "$1" in
         ;;
     uninstall)
         echo "آیا مطمئنید؟ (y/n)"
-        read confirm
+        read confirm < /dev/tty
         if [ "$confirm" = "y" ]; then
             cd $XP_DIR && docker compose down -v
             rm -rf $XP_DIR
