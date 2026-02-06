@@ -6,8 +6,10 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"net/url"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -20,6 +22,7 @@ import (
 
 var (
 	configPath = flag.String("c", "config.yaml", "Path to config file")
+	configURI  = flag.String("uri", "", "XP Protocol URI (xp://...)")
 	genKey     = flag.Bool("genkey", false, "Generate a new key")
 	genConfig  = flag.Bool("genconfig", false, "Generate example config")
 )
@@ -42,11 +45,24 @@ func main() {
 		return
 	}
 
-	cfg, err := config.LoadConfig(*configPath)
-	if err != nil {
-		fmt.Printf("❌ Failed to load config: %v\n", err)
-		fmt.Println("💡 Run with -genconfig to generate example config")
-		os.Exit(1)
+	var cfg *config.Config
+	var err error
+
+	// Check if URI is provided
+	if *configURI != "" {
+		cfg, err = parseXPURI(*configURI)
+		if err != nil {
+			fmt.Printf("❌ Failed to parse URI: %v\n", err)
+			os.Exit(1)
+		}
+	} else {
+		cfg, err = config.LoadConfig(*configPath)
+		if err != nil {
+			fmt.Printf("❌ Failed to load config: %v\n", err)
+			fmt.Println("💡 Run with -genconfig to generate example config")
+			fmt.Println("💡 Or use -uri 'xp://...' to connect with URI")
+			os.Exit(1)
+		}
 	}
 
 	fmt.Println("╔═══════════════════════════════════════════╗")
@@ -71,6 +87,70 @@ func main() {
 		fmt.Printf("❌ Client error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+// parseXPURI parses xp:// URI format
+// Format: xp://KEY@SERVER:PORT?transport=tls&sni=example.com&fragment=true#Name
+func parseXPURI(uri string) (*config.Config, error) {
+	// Remove xp:// prefix
+	if !strings.HasPrefix(uri, "xp://") {
+		return nil, fmt.Errorf("invalid URI scheme, expected xp://")
+	}
+	
+	// Parse as URL
+	u, err := url.Parse(uri)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse URI: %w", err)
+	}
+
+	// Extract key from userinfo
+	key := ""
+	if u.User != nil {
+		key = u.User.Username()
+	}
+	if key == "" {
+		return nil, fmt.Errorf("key not found in URI")
+	}
+
+	// Extract server and port
+	host := u.Hostname()
+	portStr := u.Port()
+	if portStr == "" {
+		portStr = "443"
+	}
+
+	// Parse query parameters
+	params := u.Query()
+	transport := params.Get("transport")
+	if transport == "" {
+		transport = "tls"
+	}
+	sni := params.Get("sni")
+	if sni == "" {
+		sni = "www.microsoft.com"
+	}
+	fragment := params.Get("fragment") == "true"
+	padding := params.Get("padding") == "true"
+	fingerprint := params.Get("fingerprint")
+	if fingerprint == "" {
+		fingerprint = "chrome"
+	}
+
+	// Build config
+	cfg := config.DefaultClientConfig()
+	cfg.Client.ServerAddr = fmt.Sprintf("%s:%s", host, portStr)
+	cfg.Client.Key = key
+	cfg.Client.FakeSNI = sni
+	cfg.Client.Fragment = fragment
+	cfg.Client.Padding = padding
+	cfg.Client.Fingerprint = fingerprint
+	cfg.Transport.Mode = transport
+
+	fmt.Printf("📡 Connecting to: %s:%s\n", host, portStr)
+	fmt.Printf("🎭 SNI: %s\n", sni)
+	fmt.Printf("🔧 Fragment: %v | Padding: %v\n", fragment, padding)
+
+	return &cfg, nil
 }
 
 type XPClient struct {

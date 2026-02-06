@@ -479,6 +479,15 @@ case "$1" in
     config)
         cat $XP_DIR/config/server.yaml
         ;;
+    link)
+        echo ""
+        echo "🔗 لینک کانفیگ XP Protocol:"
+        echo ""
+        cat $XP_DIR/config-link.txt
+        echo ""
+        echo "📋 این لینک رو کپی کن و توی کلاینت import کن"
+        echo ""
+        ;;
     update)
         cd $XP_DIR && docker compose pull && docker compose up -d
         echo "✓ آپدیت شد"
@@ -505,6 +514,7 @@ case "$1" in
         echo "  status     وضعیت سرور"
         echo "  logs       نمایش لاگ‌ها"
         echo "  key        نمایش کلید"
+        echo "  link       نمایش لینک کانفیگ"
         echo "  config     نمایش تنظیمات"
         echo "  update     آپدیت"
         echo "  uninstall  حذف"
@@ -549,11 +559,30 @@ EOF
 print_summary() {
     SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || curl -s icanhazip.com 2>/dev/null || echo "YOUR_SERVER_IP")
     
+    # Generate XP URI (like vless://)
+    # Format: xp://KEY@SERVER:PORT?transport=MODE&sni=SITE&fragment=true#NAME
+    XP_URI="xp://${SECRET_KEY}@${SERVER_IP}:${SERVER_PORT}?transport=${TRANSPORT_MODE}&sni=${FAKE_SITE}&fragment=true&padding=true&fingerprint=chrome#XP-Server"
+    
+    # Also generate base64 version for QR code compatibility
+    CONFIG_JSON="{\"server\":\"${SERVER_IP}\",\"port\":${SERVER_PORT},\"key\":\"${SECRET_KEY}\",\"transport\":\"${TRANSPORT_MODE}\",\"sni\":\"${FAKE_SITE}\",\"fragment\":true,\"padding\":true,\"fingerprint\":\"chrome\"}"
+    XP_BASE64=$(echo -n "$CONFIG_JSON" | base64 | tr -d '\n')
+    
     echo ""
     echo -e "${GREEN}╔═══════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${GREEN}║                    ✅ نصب با موفقیت انجام شد!                     ║${NC}"
     echo -e "${GREEN}╚═══════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
+    
+    echo -e "${PURPLE}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${PURPLE}        🔗 لینک کانفیگ (کپی کن و توی کلاینت import کن)         ${NC}"
+    echo -e "${PURPLE}═══════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${YELLOW}${XP_URI}${NC}"
+    echo ""
+    
+    # Save URI to file
+    echo "$XP_URI" > $XP_DIR/config-link.txt
+    
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${CYAN}                      اطلاعات اتصال                            ${NC}"
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
@@ -574,18 +603,18 @@ print_summary() {
     echo -e "  ${GREEN}xp status${NC}    - وضعیت سرور"
     echo -e "  ${GREEN}xp logs${NC}      - نمایش لاگ‌ها"
     echo -e "  ${GREEN}xp key${NC}       - نمایش کلید"
+    echo -e "  ${GREEN}xp link${NC}      - نمایش لینک کانفیگ"
     echo ""
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${CYAN}                      فایل‌های مهم                              ${NC}"
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo -e "  کانفیگ سرور:    ${YELLOW}$XP_DIR/config/server.yaml${NC}"
-    echo -e "  کانفیگ کلاینت:  ${YELLOW}$XP_DIR/client-config.yaml${NC}"
+    echo -e "  لینک کانفیگ:    ${YELLOW}$XP_DIR/config-link.txt${NC}"
     echo ""
-    echo -e "${PURPLE}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${PURPLE}  کانفیگ کلاینت رو به سیستم خودت منتقل کن و با دستور زیر اجرا کن:${NC}"
-    echo -e "${PURPLE}  ./xp-client -c client-config.yaml${NC}"
-    echo -e "${PURPLE}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${GREEN}  💡 برای دیدن لینک کانفیگ هر وقت: ${YELLOW}xp link${NC}"
+    echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
 }
 
