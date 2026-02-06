@@ -8,16 +8,16 @@ import (
 )
 
 const (
-	SOCKS5Version   = 0x05
-	AuthNone        = 0x00
-	CmdConnect      = 0x01
-	AddrIPv4        = 0x01
-	AddrDomain      = 0x03
-	AddrIPv6        = 0x04
-	RepSuccess      = 0x00
-	RepServerFail   = 0x01
-	RepCmdNotSupp   = 0x07
-	RepAddrNotSupp  = 0x08
+	SOCKS5Version  = 0x05
+	AuthNone       = 0x00
+	CmdConnect     = 0x01
+	AddrIPv4       = 0x01
+	AddrDomain     = 0x03
+	AddrIPv6       = 0x04
+	RepSuccess     = 0x00
+	RepServerFail  = 0x01
+	RepCmdNotSupp  = 0x07
+	RepAddrNotSupp = 0x08
 )
 
 type SOCKS5Server struct {

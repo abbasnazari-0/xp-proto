@@ -40,15 +40,15 @@ const (
 
 // Config holds transport configuration
 type Config struct {
-	Mode       Mode
-	Interface  string   // For raw mode
-	LocalIP    string   // For raw mode
-	RouterMAC  string   // For raw mode
-	TCPFlags   []string // For raw mode
-	UseKCP     bool     // Use KCP over raw
-	KCPMode    string   // KCP mode: normal, fast, fast2, fast3
-	DataShards int      // Reed-Solomon data shards
-	ParityShards int    // Reed-Solomon parity shards
+	Mode         Mode
+	Interface    string   // For raw mode
+	LocalIP      string   // For raw mode
+	RouterMAC    string   // For raw mode
+	TCPFlags     []string // For raw mode
+	UseKCP       bool     // Use KCP over raw
+	KCPMode      string   // KCP mode: normal, fast, fast2, fast3
+	DataShards   int      // Reed-Solomon data shards
+	ParityShards int      // Reed-Solomon parity shards
 }
 
 // NetConnWrapper wraps net.Conn to implement Connection interface

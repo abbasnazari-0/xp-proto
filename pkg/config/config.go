@@ -42,12 +42,12 @@ type KCPConfig struct {
 
 // RawConfig for raw packet transport (bypasses OS TCP stack!)
 type RawConfig struct {
-	Interface  string   `yaml:"interface"`   // eth0, en0, etc.
-	LocalIP    string   `yaml:"local_ip"`    // Your IP
-	RouterMAC  string   `yaml:"router_mac"`  // Gateway MAC
-	LocalMAC   string   `yaml:"local_mac"`   // Optional, auto-detected
-	TCPFlags   []string `yaml:"tcp_flags"`   // ["PA", "A"] for flag cycling
-	UseKCP     bool     `yaml:"use_kcp"`     // Use KCP over raw packets
+	Interface string   `yaml:"interface"`  // eth0, en0, etc.
+	LocalIP   string   `yaml:"local_ip"`   // Your IP
+	RouterMAC string   `yaml:"router_mac"` // Gateway MAC
+	LocalMAC  string   `yaml:"local_mac"`  // Optional, auto-detected
+	TCPFlags  []string `yaml:"tcp_flags"`  // ["PA", "A"] for flag cycling
+	UseKCP    bool     `yaml:"use_kcp"`    // Use KCP over raw packets
 }
 
 type ServerConfig struct {

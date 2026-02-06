@@ -28,15 +28,15 @@ type RawTransport struct {
 
 // RawConnection represents a raw TCP connection
 type RawConnection struct {
-	transport *RawTransport
-	localPort uint16
-	remoteIP  net.IP
+	transport  *RawTransport
+	localPort  uint16
+	remoteIP   net.IP
 	remotePort uint16
-	seqNum    uint32
-	ackNum    uint32
-	recvChan  chan []byte
-	closed    bool
-	mu        sync.Mutex
+	seqNum     uint32
+	ackNum     uint32
+	recvChan   chan []byte
+	closed     bool
+	mu         sync.Mutex
 }
 
 // RawListener listens for raw TCP connections

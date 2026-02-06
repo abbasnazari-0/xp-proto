@@ -13,9 +13,9 @@ import (
 
 // KCPTransport implements KCP-based transport with smux multiplexing
 type KCPTransport struct {
-	key         []byte
-	mode        string
-	dataShards  int
+	key          []byte
+	mode         string
+	dataShards   int
 	parityShards int
 }
 
