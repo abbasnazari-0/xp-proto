@@ -23,26 +23,69 @@
 
 ---
 
-## 🚀 نصب خودکار روی سرور Ubuntu (پیشنهادی!)
+## 🚀 نصب سریع
 
-فقط با یک دستور، همه چیز خودکار نصب میشه:
-
+### برای سرور خارج (اصلی):
 ```bash
-# نصب آنلاین (یک دستور!)
 bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-online.sh)
 ```
 
-یا اگه فایل‌ها رو دارید:
-
+### برای کلاینت (کاربر عادی):
 ```bash
-# کپی فایل‌ها به سرور
-scp -r xp-proto/ root@YOUR_SERVER:/tmp/
-
-# SSH به سرور و نصب
-ssh root@YOUR_SERVER
-cd /tmp/xp-proto
-sudo bash install.sh
+bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-client.sh)
 ```
+
+### برای سرور ایران (تونل/Relay):
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-relay.sh)
+```
+
+---
+
+## 📱 استفاده با لینک کانفیگ
+
+بعد از نصب سرور، یه لینک مثل این دریافت میکنی:
+```
+xp://SECRET_KEY@SERVER:443?transport=tls&sni=microsoft.com&fragment=true#XP-Server
+```
+
+**استفاده:**
+```bash
+./xp-client -uri "xp://..."
+```
+
+---
+
+## 🔀 تونل از سرور ایران (Relay)
+
+اگه IP سرور خارجت بلاک شده، میتونی از سرور ایرانی تونل بزنی:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  کاربر (ایران)  →  Relay (ایران)  →  XP Server (خارج)       │
+│       📱              🔀                   🌍                │
+│                       │                                      │
+│                  IP اینجا دیده میشه                          │
+│                  نه IP سرور خارج!                            │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**نصب Relay روی سرور ایران:**
+```bash
+bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-relay.sh)
+```
+
+**بعد در کانفیگ کلاینت:**
+```
+قدیم: server_addr: "IP_KHAREJ:443"
+جدید: server_addr: "IP_IRAN:443"
+```
+
+---
+
+## 🚀 نصب دستی روی سرور Ubuntu
 
 ### چی نصب میشه؟
 

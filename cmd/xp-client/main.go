@@ -96,7 +96,7 @@ func parseXPURI(uri string) (*config.Config, error) {
 	if !strings.HasPrefix(uri, "xp://") {
 		return nil, fmt.Errorf("invalid URI scheme, expected xp://")
 	}
-	
+
 	// Parse as URL
 	u, err := url.Parse(uri)
 	if err != nil {
