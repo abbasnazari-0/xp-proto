@@ -107,7 +107,8 @@ func (s *XPServer) Start() error {
 		return fmt.Errorf("failed to create TLS config: %w", err)
 	}
 
-	listener, err := tls.Listen("tcp", s.config.Server.Listen, tlsConfig)
+	// Force IPv4 - IPv6 doesn't work in Iran
+	listener, err := tls.Listen("tcp4", s.config.Server.Listen, tlsConfig)
 	if err != nil {
 		return fmt.Errorf("failed to start listener: %w", err)
 	}
@@ -194,7 +195,8 @@ func (s *XPServer) handleConnection(conn net.Conn) {
 }
 
 func (s *XPServer) handleConnect(tun *tunnel.Tunnel, target string, clientAddr string) {
-	targetConn, err := net.Dial("tcp", target)
+	// Force IPv4 - IPv6 doesn't work in Iran
+	targetConn, err := net.Dial("tcp4", target)
 	if err != nil {
 		fmt.Printf("❌ [%s] Failed to connect to %s: %v\n", clientAddr, target, err)
 		tun.Write([]byte{0x01})
@@ -248,7 +250,8 @@ func (s *XPServer) proxyToFakeSite(clientConn net.Conn) {
 	}
 	fmt.Printf("🎭 Proxying probe to fake site: %s\n", fakeSite)
 
-	targetConn, err := tls.Dial("tcp", fakeSite+":443", &tls.Config{ServerName: fakeSite})
+	// Force IPv4 - IPv6 doesn't work in Iran
+	targetConn, err := tls.Dial("tcp4", fakeSite+":443", &tls.Config{ServerName: fakeSite})
 	if err != nil {
 		return
 	}

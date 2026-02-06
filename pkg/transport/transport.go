@@ -1,9 +1,50 @@
 package transport
 
 import (
+	"fmt"
 	"io"
 	"net"
 )
+
+// ResolveIPv4 resolves a hostname to IPv4 address only
+// IPv6 doesn't work in Iran, so we force IPv4 everywhere
+func ResolveIPv4(host string) (string, error) {
+	// Check if already an IP
+	if ip := net.ParseIP(host); ip != nil {
+		if ipv4 := ip.To4(); ipv4 != nil {
+			return ipv4.String(), nil
+		}
+		return "", fmt.Errorf("IPv6 address not supported: %s", host)
+	}
+
+	// Resolve hostname to IPv4 only
+	ips, err := net.LookupIP(host)
+	if err != nil {
+		return "", fmt.Errorf("failed to resolve %s: %w", host, err)
+	}
+
+	for _, ip := range ips {
+		if ipv4 := ip.To4(); ipv4 != nil {
+			return ipv4.String(), nil
+		}
+	}
+	return "", fmt.Errorf("no IPv4 address found for %s", host)
+}
+
+// ResolveAddressIPv4 resolves host:port to IPv4 address
+func ResolveAddressIPv4(address string) (string, error) {
+	host, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return "", err
+	}
+
+	ipv4, err := ResolveIPv4(host)
+	if err != nil {
+		return "", err
+	}
+
+	return net.JoinHostPort(ipv4, port), nil
+}
 
 // Transport defines the interface for all transport modes
 type Transport interface {
@@ -89,7 +130,8 @@ func NewTCPTransport() *TCPTransport {
 }
 
 func (t *TCPTransport) Dial(address string) (Connection, error) {
-	conn, err := net.Dial("tcp", address)
+	// Force IPv4 - IPv6 doesn't work in Iran
+	conn, err := net.Dial("tcp4", address)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +139,8 @@ func (t *TCPTransport) Dial(address string) (Connection, error) {
 }
 
 func (t *TCPTransport) Listen(address string) (Listener, error) {
-	listener, err := net.Listen("tcp", address)
+	// Force IPv4 - IPv6 doesn't work in Iran
+	listener, err := net.Listen("tcp4", address)
 	if err != nil {
 		return nil, err
 	}

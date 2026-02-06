@@ -98,15 +98,23 @@ func (t *RawTransport) Dial(address string) (Connection, error) {
 		return nil, err
 	}
 
-	// Resolve remote IP
+	// Resolve remote IP - Force IPv4 only (IPv6 doesn't work in Iran)
 	ips, err := net.LookupIP(host)
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve %s: %w", host, err)
 	}
-	if len(ips) == 0 {
-		return nil, fmt.Errorf("no IPs found for %s", host)
+	
+	// Find first IPv4 address
+	var remoteIP net.IP
+	for _, ip := range ips {
+		if ipv4 := ip.To4(); ipv4 != nil {
+			remoteIP = ipv4
+			break
+		}
 	}
-	remoteIP := ips[0].To4()
+	if remoteIP == nil {
+		return nil, fmt.Errorf("no IPv4 address found for %s (IPv6 not supported)", host)
+	}
 
 	// Parse port
 	var port uint16

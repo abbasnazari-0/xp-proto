@@ -62,13 +62,19 @@ func (t *KCPTransport) createBlockCrypt() (kcp.BlockCrypt, error) {
 
 // Dial connects to a KCP server
 func (t *KCPTransport) Dial(address string) (Connection, error) {
+	// Force IPv4 - IPv6 doesn't work in Iran
+	ipv4Addr, err := ResolveAddressIPv4(address)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve address: %w", err)
+	}
+
 	block, err := t.createBlockCrypt()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create block crypt: %w", err)
 	}
 
 	// Connect with FEC
-	conn, err := kcp.DialWithOptions(address, block, t.dataShards, t.parityShards)
+	conn, err := kcp.DialWithOptions(ipv4Addr, block, t.dataShards, t.parityShards)
 	if err != nil {
 		return nil, fmt.Errorf("failed to dial KCP: %w", err)
 	}

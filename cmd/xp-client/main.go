@@ -224,16 +224,23 @@ func (c *XPClient) connectToServer() (net.Conn, error) {
 		return c.dialWithFragmentation(c.config.Client.ServerAddr, tlsConfig)
 	}
 
+	// Force IPv4 - IPv6 doesn't work in Iran
 	dialer := &net.Dialer{Timeout: 10 * time.Second}
-	conn, err := tls.DialWithDialer(dialer, "tcp", c.config.Client.ServerAddr, tlsConfig)
+	conn, err := dialer.Dial("tcp4", c.config.Client.ServerAddr)
 	if err != nil {
-		return nil, fmt.Errorf("TLS connection failed: %w", err)
+		return nil, fmt.Errorf("TCP connection failed: %w", err)
 	}
-	return conn, nil
+	tlsConn := tls.Client(conn, tlsConfig)
+	if err := tlsConn.Handshake(); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("TLS handshake failed: %w", err)
+	}
+	return tlsConn, nil
 }
 
 func (c *XPClient) dialWithFragmentation(addr string, tlsConfig *tls.Config) (*tls.Conn, error) {
-	tcpConn, err := net.DialTimeout("tcp", addr, 10*time.Second)
+	// Force IPv4 - IPv6 doesn't work in Iran
+	tcpConn, err := net.DialTimeout("tcp4", addr, 10*time.Second)
 	if err != nil {
 		return nil, err
 	}

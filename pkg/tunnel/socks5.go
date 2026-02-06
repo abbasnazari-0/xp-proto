@@ -38,7 +38,8 @@ func (s *SOCKS5Server) SetTunnel(tunnel *Tunnel) {
 }
 
 func (s *SOCKS5Server) Start() error {
-	listener, err := net.Listen("tcp", s.listenAddr)
+	// Force IPv4 - IPv6 doesn't work in Iran
+	listener, err := net.Listen("tcp4", s.listenAddr)
 	if err != nil {
 		return fmt.Errorf("failed to start SOCKS5 server: %w", err)
 	}
