@@ -162,7 +162,7 @@ func handleSNIRelay(clientConn net.Conn) {
 
 	// Extract SNI (simplified - just forward everything)
 	// In production, parse TLS ClientHello properly
-	
+
 	// Connect to target
 	targetConn, err := net.Dial("tcp", *targetAddr)
 	if err != nil {

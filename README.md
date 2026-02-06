@@ -26,16 +26,19 @@
 ## 🚀 نصب سریع
 
 ### برای سرور خارج (اصلی):
+
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-online.sh)
 ```
 
 ### برای کلاینت (کاربر عادی):
+
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-client.sh)
 ```
 
 ### برای سرور ایران (تونل/Relay):
+
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-relay.sh)
 ```
@@ -45,11 +48,13 @@ bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/i
 ## 📱 استفاده با لینک کانفیگ
 
 بعد از نصب سرور، یه لینک مثل این دریافت میکنی:
+
 ```
 xp://SECRET_KEY@SERVER:443?transport=tls&sni=microsoft.com&fragment=true#XP-Server
 ```
 
 **استفاده:**
+
 ```bash
 ./xp-client -uri "xp://..."
 ```
@@ -73,11 +78,13 @@ xp://SECRET_KEY@SERVER:443?transport=tls&sni=microsoft.com&fragment=true#XP-Serv
 ```
 
 **نصب Relay روی سرور ایران:**
+
 ```bash
 bash <(curl -sSL https://raw.githubusercontent.com/abbasnazari-0/xp-proto/main/install-relay.sh)
 ```
 
 **بعد در کانفیگ کلاینت:**
+
 ```
 قدیم: server_addr: "IP_KHAREJ:443"
 جدید: server_addr: "IP_IRAN:443"
