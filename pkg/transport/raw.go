@@ -103,7 +103,7 @@ func (t *RawTransport) Dial(address string) (Connection, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve %s: %w", host, err)
 	}
-	
+
 	// Find first IPv4 address
 	var remoteIP net.IP
 	for _, ip := range ips {
